@@ -1,18 +1,23 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import AuthContext from "./context/AuthProvider";
-import axios from "./api/axios";
+import { useEffect, useRef, useState } from "react";
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LOGIN_URL = "/auth";
 
 const Login = () => {
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const userRef = useRef();
   const errRef = useRef();
 
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -40,32 +45,22 @@ const Login = () => {
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");
-      setSuccess(true);
+      navigate(from, { replace: true });
     } catch (err) {
-      if(!err?.response) {
-        setErrMsg('No Server Response')
-      } else if(err.response?.status === 400){
-        setErrMsg('Missing Username or Password')
-      } else if(err.response?.status === 401){
-        setErrMsg('Unauthorized')
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
       } else {
-        setErrMsg('Login Failed')
+        setErrMsg("Login Failed");
       }
-      errRef.current.focus()
+      errRef.current.focus();
     }
   };
 
   return (
-    <>
-      {success ? (
-        <section>
-          <h1>You are logged in!</h1>
-          <br />
-          <p>
-            <a href="#">Go to Home</a>
-          </p>
-        </section>
-      ) : (
         <section>
           <p
             ref={errRef}
@@ -106,8 +101,6 @@ const Login = () => {
             </span>
           </p>
         </section>
-      )}
-    </>
   );
 };
 
