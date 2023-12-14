@@ -36,8 +36,8 @@ function App() {
           <Route path="editor" element={<Editor />} />
         </Route>
 
-        <Route element={<RequireAuth allowedRoles={[5150]} />}>
-          <Route path="admin" element={<ROLES.Admin />} />
+        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+          <Route path="admin" element={<Admin />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Editor]} />}>
