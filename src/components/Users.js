@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "../api/axios";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -33,6 +32,7 @@ const Users = () => {
       isMounted = false;
       controller.abort();
     };
+    // eslint-disable-next-line
   }, []);
 
   return (
